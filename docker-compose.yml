@@ -1,0 +1,68 @@
+services:
+  # 1. MongoDB Database Engine
+  mongodb:
+    image: mongo:7-jammy
+    container_name: nakam-mongodb
+    restart: always
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: nakam
+    healthcheck:
+      test: ['CMD', 'mongosh', '--eval', "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - nakam_network
+
+  # 2. Express 5.2.1 REST API & Auth Tier
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nakam-backend
+    restart: always
+    depends_on:
+      mongodb:
+        condition: service_healthy
+    ports:
+      - '5000:5000'
+    env_file:
+      - ./backend/.env
+    environment:
+      PORT: 5000
+      NODE_ENV: production
+      MONGODB_URI: mongodb://mongodb:27017/nakam
+      BETTER_AUTH_URL: http://localhost:5000
+      CORS_ORIGIN: http://localhost:3000
+    networks:
+      - nakam_network
+
+  # 3. Next.js 16.4.0 Editorial Storefront & Admin
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nakam-frontend
+    restart: always
+    depends_on:
+      - backend
+    ports:
+      - '3000:3000'
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      BACKEND_URL: http://backend:5000
+      NEXT_PUBLIC_APP_URL: http://localhost:3000
+    networks:
+      - nakam_network
+
+volumes:
+  mongo_data:
+
+networks:
+  nakam_network:
+    driver: bridge
