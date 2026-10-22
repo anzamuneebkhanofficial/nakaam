@@ -95,10 +95,10 @@ NODE_ENV=development
 FRONTEND_URL=http://localhost:3000
 CORS_ALLOWED_ORIGINS=http://localhost:3000
 MONGODB_URI=mongodb://localhost:27017/nakaam_db
-BETTER_AUTH_SECRET=your_32_character_secret_here
-FIELD_ENCRYPTION_KEY=MTIzNDU2Nzg5MDEyMzQ1Njc4OTAxMjM0NTY3ODkwMTI=
-ADMIN_EMAIL=admin@nakaam.com
-ADMIN_PASSWORD_HASH=$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW
+BETTER_AUTH_SECRET=
+FIELD_ENCRYPTION_KEY
+ADMIN_EMAIL=
+ADMIN_PASSWORD_HASH=
 ```
 
 Start the backend daemon:
@@ -125,7 +125,7 @@ Configure `frontend/.env.local`:
 NEXT_PUBLIC_API_URL=http://localhost:3000/api
 BACKEND_URL=http://localhost:5000
 NEXT_PUBLIC_SITE_NAME=Nakaam
-NEXT_PUBLIC_STORE_WHATSAPP=923001234567
+NEXT_PUBLIC_STORE_WHATSAPP=
 ```
 
 Start the frontend development server:
